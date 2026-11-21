@@ -1,8 +1,9 @@
 import { type Video, views, watchPercent, precise, growth } from './domain';
+import { MAX_COMPARISON_VIDEOS } from './comparison';
 
 export type Summary = { headline: string; observations: string[]; perspective: string; nextStep: string };
 export function summarizeVideos(videos: Video[], question: string): Summary {
-  if (videos.length < 2 || videos.length > 4) throw new Error('Select 2–4 videos to get a comparison summary.');
+  if (videos.length < 2 || videos.length > MAX_COMPARISON_VIDEOS) throw new Error(`Select 2–${MAX_COMPARISON_VIDEOS} videos to get a comparison summary.`);
   const observations: string[] = [];
   const recorded = videos.filter(v => v.snapshots.length);
   const byViews = [...recorded].sort((a,b) => views(b)-views(a));

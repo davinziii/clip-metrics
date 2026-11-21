@@ -13,7 +13,7 @@ Open http://localhost:3000. Production: `npm run build` then `npm start`.
 
 ## Features
 
-- Dashboard, video library and detail view, 2–4-video comparisons, custom niche management, and Settings.
+- Dashboard, video library and detail view, 2–10-video comparisons, custom niche management, and Settings.
 - Compare includes an optional question field above **Get Summary**. Summaries use rule-based analysis of the selected videos, distinguish reach from retention, identify missing evidence and platform/date differences, and suggest a next check. No paid AI API is used; arbitrary questions needing video content or external facts cannot be answered from stored metrics alone.
 - Persistent themes with a one-click dark/light navigation toggle and a System preference in Settings, responsive navigation, keyboard-accessible native modal dialogs, reduced-motion support.
 - Search, platform/niche/date filters, view/retention sorting, retention charts, historical views, and descriptive insights.

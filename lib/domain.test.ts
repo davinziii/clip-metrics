@@ -2,7 +2,23 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { addSnapshot, canonicalUrl, emptyData, growth, parseData, platformFor, portfolioTimeline, views, watchPercent, type Video } from './domain';
 import { summarizeVideos } from './summary';
+import { MAX_COMPARISON_VIDEOS, toggleComparison } from './comparison';
 const video = (id = 'a'): Video => ({ id, url: `https://tiktok.com/@creator/video/${id}`, platform: 'TikTok', title: id, creator: '', thumbnail: '', publishedAt: '', nicheId: null, duration: 20, metrics: { watchTime: 25, fullWatch: 50 }, snapshots: [], createdAt: '2026-01-01T00:00:00.000Z', lastChecked: null });
+test('comparison accepts ten videos, blocks an eleventh, and frees a slot on removal', () => {
+  let selected: string[] = [];
+  for (let index = 0; index < MAX_COMPARISON_VIDEOS; index++) selected = toggleComparison(selected, String(index));
+  assert.equal(selected.length,10);
+  assert.deepEqual(toggleComparison(selected,'eleventh'),selected);
+  selected = toggleComparison(selected,'0');
+  selected = toggleComparison(selected,'eleventh');
+  assert.equal(selected.length,10);
+  assert.ok(selected.includes('eleventh')); assert.ok(!selected.includes('0'));
+});
+test('comparison summary includes the full ten-video selection', () => {
+  const videos = Array.from({ length: 10 }, (_,i) => ({ ...video(String(i)), metrics: { watchTime: 5+i, fullWatch: 10+i*5 } }));
+  assert.ok(summarizeVideos(videos,'').observations.some(s => s.includes('“9”') && s.includes('55%')));
+  assert.throws(() => summarizeVideos([...videos,video('eleventh')],''));
+});
 test('reject lookalike platform hosts and preserve unique YouTube identities', () => {
   assert.equal(platformFor('https://tiktok.com.evil.com/a'), null);
   assert.equal(platformFor('https://evil-tiktok.com/a'), null);
